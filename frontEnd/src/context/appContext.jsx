@@ -4,6 +4,44 @@ export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
 
+    const stateList = [
+        'Abia',
+        'Adamawa',
+        'Akwa Ibom',
+        'Anambra',
+        'Bauchi',
+        'Bayelsa',
+        'Benue',
+        'Borno',
+        'Cross River',
+        'Delta',
+        'Ebonyi',
+        'Edo',
+        'Ekiti',
+        'Enugu',
+        'Gombe',
+        'Imo',
+        'Jigawa',
+        'Kaduna',
+        'Kano',
+        'Kogi',
+        'Kwara',
+        'Lagos',
+        'Nasarawa',
+        'Niger',
+        'Ogun',
+        'Ondo',
+        'Osun',
+        'Oyo',
+        'Plateau',
+        'Rivers',
+        'Sokoto',
+        'Taraba',
+        'Yobe',
+        'Zamfara',
+      ];
+      
+
     // Updated Country List
     const countryList = [
         "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla",
@@ -96,44 +134,47 @@ const AppContextProvider = (props) => {
     
     const initialState = {
         personalData: {
-            surname: 'Ademola',
-            other_names: 'Festus OluwatiBuisfhsfh',
-            gender: 'M',
-            dateOfBirth: '1950-06-30',
-            place_of_birth: 'Nigeria',
-            marital_status: 'S', // S for single, M for married, etc.
-            residence_addr1: '123 Main Street',
-            state_residence: 'Lagos',
-            residence_lga: 'Shomolu',
-            nationality: 'Nigerian',
-            stateOfOrigin: 'Oyo',
-            lgaOfOrigin: 'Ibadan',
-            gsm: '08012345678',
+            surname: '',
+            other_names: '',
+            gender: '',
+            dateOfBirth: '',
+            place_of_birth: '', 
+            marital_status: '',
+            residence_addr1: '',
+            state_residence: '',
+            residence_lga: '',
+            nationality: '', 
+            stateOfOrigin: '',
+            lgaOfOrigin: '',
+            gsm: '',
         },
         nextOfKin: {
-            fullName: 'Jane Doe',
-            relationship: 'Sister',
-            address: '456 Elm Street, Lagos',
+            fullName: '',
+            relationship: '',
+            address: '',
         },
         coverDestination: {
-            passportNo: 'A123456789',
-            issuance_date: '2020-01-01',
-            expiry_date: '2030-01-01',
-            nin: '12345678901',
-            destination: 'Worldwide',
-            startDate: '2025-01-01',
-            endDate: '2025-04-20',
+            passportNo: '',
+            issuance_date: '',
+            expiry_date: '',
+            nin: '',
+            destination: '', // Set to empty
+            startDate: '',
+            endDate: '',
         },
         loginDetails: {
-            email: 'tamedo@example.com',
-            password: 'password123',
-            confirmPassword: 'password123',
+            email: '',
+            password: '',
+            confirmPassword: '',
         },
         others: {
-            q1: 'Answer to question 1',
-            q2: 'Answer to question 2',
+            q1: '',
+            q2: '',
         },
     };
+
+      
+    
     
 
     const [formData, setFormData] = useState(initialState);
@@ -155,7 +196,8 @@ const AppContextProvider = (props) => {
         countryZones,
         getAllZone1Countries,
         getAllZone2Countries,
-        getAllCountries
+        getAllCountries,
+        stateList
     };
 
     return (
