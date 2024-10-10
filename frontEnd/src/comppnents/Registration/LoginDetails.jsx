@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { AppContext } from '../../context/appContext';
+import { validatePasswordMatch, hashPassword } from './validationHelper'; 
 
 const LoginDetails = ({ handleNextSection, onProgressUpdate }) => {
   const { formData, handleChange } = useContext(AppContext);
@@ -11,6 +12,7 @@ const LoginDetails = ({ handleNextSection, onProgressUpdate }) => {
   ];
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [validationError, setValidationError] = useState('');
 
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
@@ -18,19 +20,33 @@ const LoginDetails = ({ handleNextSection, onProgressUpdate }) => {
       onProgressUpdate((currentQuestionIndex - 1) / questions.length); // Update progress bar
     }
   };
-  
-  const handleNext = () => {
+
+  const handleNext = async () => {
     const { email, password, confirmPassword } = formData.loginDetails;
     const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
+    // Validation logic
     if (currentQuestionIndex === 0 && email.includes('@')) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else if (currentQuestionIndex === 1 && password.length >= 6) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else if (currentQuestionIndex === 2 && password === confirmPassword) {
-      // console.log(formData);
-      
-      handleNextSection();
+    } else if (currentQuestionIndex === 2) {
+      const passwordError = validatePasswordMatch(password, confirmPassword);
+      if (passwordError) {
+        setValidationError(passwordError);
+      } else {
+        // Hash the password asynchronously and proceed to the next section
+        const hashedPassword = await hashPassword(password);
+        formData.loginDetails.password = hashedPassword; // Save hashed password
+        formData.loginDetails.confirmPassword = ''; // Clear confirm password field
+        handleNextSection();
+      }
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleNext();
     }
   };
 
@@ -52,25 +68,67 @@ const LoginDetails = ({ handleNextSection, onProgressUpdate }) => {
           <input
             type={currentQuestion.type}
             placeholder={currentQuestion.placeholder}
-            value={currentQuestionIndex === 0 ? formData.loginDetails.email : currentQuestionIndex === 1 ? formData.loginDetails.password : formData.loginDetails.confirmPassword}
-            onChange={(e) => handleChange('loginDetails', currentQuestionIndex === 0 ? 'email' : currentQuestionIndex === 1 ? 'password' : 'confirmPassword', e.target.value)}
-            className="border rounded w-full sm:max-w-[534px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value={
+              currentQuestionIndex === 0
+                ? formData.loginDetails.email
+                : currentQuestionIndex === 1
+                ? formData.loginDetails.password
+                : formData.loginDetails.confirmPassword
+            }
+            onChange={(e) =>
+              handleChange(
+                'loginDetails',
+                currentQuestionIndex === 0
+                  ? 'email'
+                  : currentQuestionIndex === 1
+                  ? 'password'
+                  : 'confirmPassword',
+                e.target.value
+              )
+            }
+            onKeyDown={handleKeyDown} // Handle Enter key press
+            className="border rounded w-full sm:max-w-[534px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50"
           />
+          {validationError && (
+            <p className="text-red-500 text-xs italic mt-1">{validationError}</p>
+          )}
         </div>
 
         <div className="flex justify-center gap-3 w-full items-center">
           <button
-                onClick={handlePrev}
-                className={`mt-4 py-2 px-4 rounded ${currentQuestionIndex > 0 ? 'bg-primary text-white' : 'bg-gray2 text-gray4 cursor-not-allowed'}`}
-                disabled={currentQuestionIndex === 0} // Disable if on the first question
-              >
-                Previous
+            onClick={handlePrev}
+            className={`mt-4 py-2 px-4 rounded ${
+              currentQuestionIndex > 0 ? 'bg-primary text-white' : 'bg-gray2 text-gray4 cursor-not-allowed'
+            }`}
+            disabled={currentQuestionIndex === 0}
+          >
+            Previous
           </button>
-            
+
           <button
             onClick={handleNext}
-            className={`mt-4 w-20 py-2 rounded ${currentQuestionIndex === 0 ? formData.loginDetails.email.includes('@') ? 'bg-primary text-white' : 'bg-gray2 text-gray4 cursor-not-allowed' : currentQuestionIndex === 1 ? formData.loginDetails.password.length >= 6 ? 'bg-primary text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed' : formData.loginDetails.password === formData.loginDetails.confirmPassword ? 'bg-primary text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
-            disabled={!(currentQuestionIndex === 0 ? formData.loginDetails.email.includes('@') : currentQuestionIndex === 1 ? formData.loginDetails.password.length >= 6 : formData.loginDetails.password === formData.loginDetails.confirmPassword)}
+            className={`mt-4 w-20 py-2 rounded ${
+              currentQuestionIndex === 0
+                ? formData.loginDetails.email.includes('@')
+                  ? 'bg-primary text-white'
+                  : 'bg-gray2 text-gray4 cursor-not-allowed'
+                : currentQuestionIndex === 1
+                ? formData.loginDetails.password.length >= 6
+                  ? 'bg-primary text-white'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : formData.loginDetails.password === formData.loginDetails.confirmPassword
+                ? 'bg-primary text-white'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+            disabled={
+              !(
+                currentQuestionIndex === 0
+                  ? formData.loginDetails.email.includes('@')
+                  : currentQuestionIndex === 1
+                  ? formData.loginDetails.password.length >= 6
+                  : formData.loginDetails.password === formData.loginDetails.confirmPassword
+              )
+            }
           >
             Next
           </button>
@@ -78,6 +136,6 @@ const LoginDetails = ({ handleNextSection, onProgressUpdate }) => {
       </div>
     </div>
   );
-}
+};
 
 export default LoginDetails;

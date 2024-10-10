@@ -146,7 +146,7 @@ const AppContextProvider = (props) => {
             nationality: '', 
             stateOfOrigin: '',
             lgaOfOrigin: '',
-            gsm: '',
+            telephone_number: '',
         },
         nextOfKin: {
             fullName: '',

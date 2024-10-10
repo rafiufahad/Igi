@@ -4,62 +4,32 @@ import CustomSelect from '../CustomSelect';
 import { validatePassportNo, validateIssueDate, validateExpiryDate, validateNIN, validateStartDate, validateEndDate } from './validationHelper';
 
 const CoverDestination = ({ handleNextSection, onProgressUpdate }) => {
-  const { countryList, formData, handleChange, countryZones } = useContext(AppContext);
+  const { formData, handleChange, countryZones } = useContext(AppContext);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [validationError, setValidationError] = useState('');
 
   const questions = [
-    { name: 'passportNo', label: 'Passport No:', type: 'text', placeholder: 'Enter your Passport No', validate: validatePassportNo
-    },
-    { name: 'issueDate', label: 'Issue Date:', type: 'date',
-      validate: validateIssueDate
-    },
-    { 
-      name: 'expiryDate', 
-      label: 'Expiry Date:', 
-      type: 'date',
-      validate: (value) => validateExpiryDate(formData.coverDestination.issueDate, value)
-    },
-    { 
-      name: 'nin', 
-      label: 'NIN:', 
-      type: 'text', 
-      placeholder: 'Enter your NIN',
-      validate: validateNIN
-    },
+    { name: 'passportNo', label: 'Passport No:', type: 'text', placeholder: 'Enter your Passport No', validate: validatePassportNo },
+    { name: 'issueDate', label: 'Issue Date:', type: 'date', validate: validateIssueDate },
+    { name: 'expiryDate', label: 'Expiry Date:', type: 'date', validate: (value) => validateExpiryDate(formData.coverDestination.issueDate, value) },
+    { name: 'nin', label: 'NIN:', type: 'text', placeholder: 'Enter your NIN', validate: validateNIN },
     { 
       name: 'destination', 
       label: 'Destination:',
       type: 'select',
-      options: renderCountryOptions(),
-      renderOptions: renderCountryOptions
+      options: [
+        { header: "SCHENGEN", countries: countryZones.zone1.schengen },
+        { header: "AFRICA", countries: countryZones.zone1.africa },
+        { header: "MIDDLE EAST", countries: countryZones.zone1.middleEast },
+        { header: "EUROPE", countries: countryZones.zone1.europe },
+        { header: "ALL OTHERS", countries: countryZones.zone2.allOthers },
+        { header: "WORLDWIDE", countries: ["Worldwide"] }
+      ],
+      groupedOptions: true
     },
-    { 
-      name: 'startDate', 
-      label: 'Start Date:', 
-      type: 'date',
-      validate: validateStartDate
-    },
-    { 
-      name: 'endDate', 
-      label: 'End Date:', 
-      type: 'date',
-      validate: validateEndDate
-    },
+    { name: 'startDate', label: 'Start Date:', type: 'date', validate: validateStartDate },
+    { name: 'endDate', label: 'End Date:', type: 'date', validate: validateEndDate }
   ];
-
-  function renderCountryOptions() {
-    const zoneData = [
-      { header: "SCHENGEN", countries: countryZones.zone1.schengen },
-      { header: "AFRICA", countries: countryZones.zone1.africa },
-      { header: "MIDDLE EAST", countries: countryZones.zone1.middleEast },
-      { header: "EUROPE", countries: countryZones.zone1.europe },
-      { header: "ALL OTHERS", countries: countryZones.zone2.allOthers },
-      { header: "WORLDWIDE", countries: ["Worldwide"] }
-    ];
-
-    return zoneData;
-  }
 
   const currentQuestion = questions[currentQuestionIndex];
   const currentValue = formData.coverDestination[currentQuestion.name];
@@ -130,10 +100,10 @@ const CoverDestination = ({ handleNextSection, onProgressUpdate }) => {
           {currentQuestion.type === 'select' ? (
             <CustomSelect
               name={currentQuestion.name}
-              options={currentQuestion.renderOptions()}
+              options={currentQuestion.options}
               value={currentValue}
               onChange={handleInputChange}
-              groupedOptions={true}
+              groupedOptions={currentQuestion.groupedOptions}
             />
           ) : (
             <input
