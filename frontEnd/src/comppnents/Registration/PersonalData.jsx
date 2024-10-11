@@ -23,7 +23,7 @@ const PersonalData = ({ onProgressUpdate, handleNextSection }) => {
     { name: 'other_names', label: 'Other Names', type: 'text', placeholder: 'Enter your other names' },
     { name: 'gender', label: 'Gender', type: 'select', options: ['Male', 'Female', 'Prefer not to say'] },
     { 
-      name: 'dateOfBirth', 
+      name: 'dob', 
       label: 'Date of Birth', 
       type: 'date', 
       placeholder: 'Enter your date of birth',
@@ -38,13 +38,14 @@ const PersonalData = ({ onProgressUpdate, handleNextSection }) => {
     { name: 'stateOfOrigin', label: 'State of Origin', type: 'select', options: stateList },
     { name: 'lgaOfOrigin', label: 'L.G.A of Origin', type: 'text', placeholder: 'Enter your L.G.A of origin' },
     { 
-      name: 'gsm', 
-      label: 'GSM', 
+      name: 'telephone_number', 
+      label: 'Telephone Number', 
       type: 'text', 
-      placeholder: 'Enter your GSM number',
+      placeholder: 'Enter your telephone number',
       validate: validateGSM
     },
-  ];
+];
+
 
   const currentQuestion = questions[currentQuestionIndex];
   const currentValue = formData.personalData[currentQuestion.name];

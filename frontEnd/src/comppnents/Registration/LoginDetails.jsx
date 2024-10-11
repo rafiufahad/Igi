@@ -6,10 +6,29 @@ const LoginDetails = ({ handleNextSection, onProgressUpdate }) => {
   const { formData, handleChange } = useContext(AppContext);
 
   const questions = [
-    { id: 1, label: 'Email Address', type: 'email', placeholder: 'Enter your Email Address' },
-    { id: 2, label: 'Password', type: 'password', placeholder: 'Enter your Password' },
-    { id: 3, label: 'Confirm Password', type: 'password', placeholder: 'Confirm your Password' },
-  ];
+    { 
+      id: 1, 
+      name: 'email',  // Added the 'name' key to match the loginDetails object
+      label: 'Email Address', 
+      type: 'email', 
+      placeholder: 'Enter your Email Address' 
+    },
+    { 
+      id: 2, 
+      name: 'password',  // Added the 'name' key to match the loginDetails object
+      label: 'Password', 
+      type: 'password', 
+      placeholder: 'Enter your Password' 
+    },
+    { 
+      id: 3, 
+      name: 'confirmPassword',  // Added the 'name' key to match the loginDetails object
+      label: 'Confirm Password', 
+      type: 'password', 
+      placeholder: 'Confirm your Password' 
+    }
+];
+
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [validationError, setValidationError] = useState('');

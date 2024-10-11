@@ -25,10 +25,10 @@ const parseDate = (dateString) => {
 
 // Function to calculate age from date of birth
 export const calculateAge = (formData) => {
-  const { dateOfBirth } = formData.personalData;
+  const { dob } = formData.personalData;
 
   try {
-    const birthDate = parseDate(dateOfBirth);
+    const birthDate = parseDate(dob);
     const ageDifMs = Date.now() - birthDate.getTime();
     const ageDate = new Date(ageDifMs);
     return Math.abs(ageDate.getUTCFullYear() - 1970);

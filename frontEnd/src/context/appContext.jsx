@@ -132,46 +132,88 @@ const AppContextProvider = (props) => {
     const getAllCountries = [...getAllZone1Countries, ...getAllZone2Countries];
     
     
+    // const initialState = {
+    //     personalData: {
+    //       surname: '',                        
+    //       other_names: '',                    
+    //       gender: '',                         
+    //       dob: '',                    
+    //       place_of_birth: '',                 
+    //       marital_status: '',                 
+    //       residence_addr1: '',                
+    //       state_residence: '',                
+    //       residence_lga: '',                  
+    //       nationality: '',                    
+    //       stateOfOrigin: '',                  
+    //       lgaOfOrigin: '',                    
+    //       telephone_number: '',               
+    //     },
+    //     nextOfKin: {
+    //       fullName: '',
+    //       relationship: '',
+    //       address: '',
+    //     },
+    //     coverDestination: {
+    //       passportNo: '',                     
+    //       issuance_date: '',                  
+    //       expiry_date: '',                    
+    //       nin: '',                            
+    //       destination: '',                    
+    //       startDate: '',                      
+    //       endDate: '',                        
+    //     },
+    //     loginDetails: {
+    //       email: '',                          
+    //       password: '',                       
+    //       confirmPassword: '', 
+    //     },
+    //     others: {
+    //       q1: '',
+    //       q2: '',
+    //     },
+    //   };
+      
     const initialState = {
         personalData: {
-            surname: '',
-            other_names: '',
-            gender: '',
-            dateOfBirth: '',
-            place_of_birth: '', 
-            marital_status: '',
-            residence_addr1: '',
-            state_residence: '',
-            residence_lga: '',
-            nationality: '', 
-            stateOfOrigin: '',
-            lgaOfOrigin: '',
-            telephone_number: '',
+          surname: 'Doe',                        // Sample surname
+          other_names: 'John',                   // Sample first names
+          gender: 'Male',                        // Sample gender
+          dob: '1990-01-01',                     // Sample date of birth
+          place_of_birth: 'Cityville',           // Sample place of birth
+          marital_status: 'Single',              // Sample marital status
+          residence_addr1: '123 Main St',        // Sample residence address
+          state_residence: 'California',         // Sample state of residence
+          residence_lga: 'Los Angeles',          // Sample LGA of residence
+          nationality: 'NG',                     // Sample nationality (e.g., NG for Nigeria)
+          stateOfOrigin: 'California',           // Sample state of origin
+          lgaOfOrigin: 'Los Angeles',            // Sample LGA of origin
+          telephone_number: '555-1234',          // Sample telephone number
         },
         nextOfKin: {
-            fullName: '',
-            relationship: '',
-            address: '',
+          fullName: 'Jane Doe',                  // Sample full name of next of kin
+          relationship: 'Sister',                // Sample relationship
+          address: '456 Oak St',                 // Sample address
         },
         coverDestination: {
-            passportNo: '',
-            issuance_date: '',
-            expiry_date: '',
-            nin: '',
-            destination: '', // Set to empty
-            startDate: '',
-            endDate: '',
+          passportNo: 'A12345678',               // Sample passport number
+          issuance_date: '2020-01-01',           // Sample issuance date
+          expiry_date: '2030-01-01',             // Sample expiry date
+          nin: '1234567890',                     // Sample NIN
+          destination: 'USA',                    // Sample destination
+          startDate: '2023-01-01',               // Sample start date
+          endDate: '2024-01-01',                 // Sample end date
         },
         loginDetails: {
-            email: '',
-            password: '',
-            confirmPassword: '',
+          email: 'rafiufahad1@gmail.com',         // Sample email
+          password: 'University2@',          // Sample password
+          confirmPassword: 'University2@',   // Sample confirm password
         },
         others: {
-            q1: '',
-            q2: '',
+          q1: 'Yes',                             // Sample answer to question 1
+          q2: 'No',                              // Sample answer to question 2
         },
-    };
+      };
+      
 
       
     

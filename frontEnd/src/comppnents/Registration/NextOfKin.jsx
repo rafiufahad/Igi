@@ -7,15 +7,29 @@ const NextOfKin = ({ handleNextSection, onProgressUpdate }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const questions = [
-    { name: 'fullName', label: 'Full Name', type: 'text', placeholder: 'Enter your Full Name' },
     { 
-      name: 'relationship', 
+      name: 'fullName',  // Matches the 'nextOfKin' object in formData
+      label: 'Full Name', 
+      type: 'text', 
+      placeholder: 'Enter your Full Name' 
+    },
+    { 
+      name: 'relationship',  // Matches the 'nextOfKin' object in formData
       label: 'Relationship', 
       type: 'select', 
-      options: ['Spouse', 'Parent', 'Child', 'Sibling', 'Guardian', 'Grandparent', 'Aunt', 'Uncle', 'Cousin', 'Niece', 'Nephew', 'Partner', 'Friend']
+      options: [
+        'Spouse', 'Parent', 'Child', 'Sibling', 'Guardian', 'Grandparent', 'Aunt', 
+        'Uncle', 'Cousin', 'Niece', 'Nephew', 'Partner', 'Friend'
+      ] 
     },
-    { name: 'address', label: 'Address', type: 'text', placeholder: 'Enter your Address' },
-  ];
+    { 
+      name: 'address',  // Matches the 'nextOfKin' object in formData
+      label: 'Address', 
+      type: 'text', 
+      placeholder: 'Enter your Address' 
+    }
+];
+
 
   const currentQuestion = questions[currentQuestionIndex];
   const currentValue = formData.nextOfKin[currentQuestion.name];

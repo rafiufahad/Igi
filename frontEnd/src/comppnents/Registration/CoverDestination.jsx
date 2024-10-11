@@ -9,10 +9,32 @@ const CoverDestination = ({ handleNextSection, onProgressUpdate }) => {
   const [validationError, setValidationError] = useState('');
 
   const questions = [
-    { name: 'passportNo', label: 'Passport No:', type: 'text', placeholder: 'Enter your Passport No', validate: validatePassportNo },
-    { name: 'issueDate', label: 'Issue Date:', type: 'date', validate: validateIssueDate },
-    { name: 'expiryDate', label: 'Expiry Date:', type: 'date', validate: (value) => validateExpiryDate(formData.coverDestination.issueDate, value) },
-    { name: 'nin', label: 'NIN:', type: 'text', placeholder: 'Enter your NIN', validate: validateNIN },
+    { 
+      name: 'passportNo', 
+      label: 'Passport No:', 
+      type: 'text', 
+      placeholder: 'Enter your Passport No', 
+      validate: validatePassportNo 
+    },
+    { 
+      name: 'issuance_date',  // Changed from 'issueDate' to 'issuance_date' to match the coverDestination object
+      label: 'Issuance Date:', 
+      type: 'date', 
+      validate: validateIssueDate 
+    },
+    { 
+      name: 'expiry_date',  // Changed from 'expiryDate' to 'expiry_date'
+      label: 'Expiry Date:', 
+      type: 'date', 
+      validate: (value) => validateExpiryDate(formData.coverDestination.issuance_date, value) 
+    },
+    { 
+      name: 'nin', 
+      label: 'NIN:', 
+      type: 'text', 
+      placeholder: 'Enter your NIN', 
+      validate: validateNIN 
+    },
     { 
       name: 'destination', 
       label: 'Destination:',
@@ -27,9 +49,20 @@ const CoverDestination = ({ handleNextSection, onProgressUpdate }) => {
       ],
       groupedOptions: true
     },
-    { name: 'startDate', label: 'Start Date:', type: 'date', validate: validateStartDate },
-    { name: 'endDate', label: 'End Date:', type: 'date', validate: validateEndDate }
-  ];
+    { 
+      name: 'startDate', 
+      label: 'Start Date:', 
+      type: 'date', 
+      validate: validateStartDate 
+    },
+    { 
+      name: 'endDate', 
+      label: 'End Date:', 
+      type: 'date', 
+      validate: validateEndDate 
+    }
+];
+
 
   const currentQuestion = questions[currentQuestionIndex];
   const currentValue = formData.coverDestination[currentQuestion.name];
