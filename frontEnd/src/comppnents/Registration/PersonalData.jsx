@@ -1,22 +1,19 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../context/appContext';
 import CustomSelect from '../CustomSelect';
+import { validatePhoneNumber, validateDateOfBirth } from '../../utils/validationHelper';
 
 const PersonalData = ({ onProgressUpdate, handleNextSection }) => {
   const { countryList, stateList, handleChange, formData } = useContext(AppContext);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [validationError, setValidationError] = useState('');
 
-  const validateGSM = (value) => {
-    const gsmRegex = /^0\d{10}$/;
-    return gsmRegex.test(value) ? '' : 'Phone number must start with 0 and be 11 digits long';
-  };
+  // const validateGSM = (value) => {
+  //   const gsmRegex = /^0\d{10}$/;
+  //   return gsmRegex.test(value) ? '' : 'Phone number must start with 0 and be 11 digits long';
+  // };
 
-  const validateDateOfBirth = (value) => {
-    const selectedDate = new Date(value);
-    const today = new Date();
-    return selectedDate <= today ? '' : 'Date of birth cannot be in the future';
-  };
+  
 
   const questions = [
     { name: 'surname', label: 'Surname', type: 'text', placeholder: 'Enter your surname' },
@@ -42,7 +39,7 @@ const PersonalData = ({ onProgressUpdate, handleNextSection }) => {
       label: 'Telephone Number', 
       type: 'text', 
       placeholder: 'Enter your telephone number',
-      validate: validateGSM
+      validate: validatePhoneNumber
     },
 ];
 

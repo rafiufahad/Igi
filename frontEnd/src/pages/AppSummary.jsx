@@ -1,12 +1,11 @@
 import { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../context/appContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import api from '../api/api';
-import { useSummaryData, generateReference } from '../comppnents/Registration/summaryHelpers';
+import { useSummaryData, generateReference, premiumAmount } from '../utils/summaryHelpers';
 import Footer from '../comppnents/Footer';
 import Header from '../comppnents/Header';
 import { payWithPaystack } from '../api/paystackPayment';
-import amount from '../comppnents/Registration/summaryHelpers';
 import axios from 'axios';
 
 
@@ -20,156 +19,117 @@ const AppSummary = () => {
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
   
+  
   const { formData, countryZones } = useContext(AppContext);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [reference, setReference] = useState(sessionStorage.getItem('paymentReference') || generateReference()); // Use stored reference or generate one
 
   const navigate = useNavigate();
   const summaryData = useSummaryData(formData, countryZones);
-  // const email = summaryData.email;
-  // const calculatedAmount = amount(formData, countryZones); // Get the amount
-
-  // // Handle form submission
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   const formDataToSend = new FormData();
-  //   formDataToSend.append('surname', 'Lagbaja2');
-  //   formDataToSend.append('other_names', 'Tamedo');
-  //   formDataToSend.append('country', 'NG');
-  //   formDataToSend.append('gsm', '08012345611');
-  //   formDataToSend.append('insured', 'JGRAB BABS2');
-  //   formDataToSend.append('contact_name', 'Jane Doe2');
-  //   formDataToSend.append('residence_addr1', 'My residence address');
-  //   formDataToSend.append('residence_addr2', 'My residence two');
-  //   formDataToSend.append('permanent_address1', 'Permanent addr 1');
-  //   formDataToSend.append('permanent_address2', 'Permanent addr 2');
-  //   formDataToSend.append('nationality', 'NG');
-  //   formDataToSend.append('state_residence', 'NG-100000');
-  //   formDataToSend.append('residence_lga', 'shomolu');
-  //   formDataToSend.append('office_lga', 'Ikeja');
-  //   formDataToSend.append('dob_year', '1970');
-  //   formDataToSend.append('dob_month', '06');
-  //   formDataToSend.append('dob_day', '30');
-  //   formDataToSend.append('email', email); // Use email from summaryData
-  //   formDataToSend.append('reg_date', '2022-08-30');
-  //   formDataToSend.append('title', 'Mr.');
-  //   formDataToSend.append('marital_status', 'S');
-  //   formDataToSend.append('gender', 'M');
-  //   formDataToSend.append('employer_name', 'Syssoft');
-  //   formDataToSend.append('office_addr', 'Estaport Avenue');
-  //   formDataToSend.append('occupation', 'Technician');
-  //   formDataToSend.append('id_type', 'NIDC');
-  //   formDataToSend.append('bvn', '1234567890');
-  //   formDataToSend.append('website', 'www.tamedo.com');
-
-
-  //   // Generate a new reference on form submit
-  //   const newReference = generateReference();
-  //   setReference(newReference); // Update state to reflect the new reference
-  //   sessionStorage.setItem('paymentReference', newReference); // Store the new reference in sessionStorage
-
-  //   // Append the new reference to the form data being sent in the POST request
-  //   formDataToSend.append('reference', newReference);
-
-  //   // API call to submit form data
-  //   api.post('?process=Processopenledapi&process_code=100', formDataToSend, {
-  //     headers: {
-  //       'Authorization': 'Bearer 39109f7df56e1051c39YNM9e6YK85066bb852',
-  //     }
-  //   })
-  //   .then((res) => {
-  //     console.log('Response:', res.data);
-  //     alert('Form submitted successfully!');
-  //     setErrorMessage(''); // Clear any previous error message
-
-  //     // Immediately initiate Paystack payment after form submission
-  //     payWithPaystack(
-  //       email,
-  //       calculatedAmount, 
-  //       newReference, // Use the new reference for payment
-  //       (paymentReference) => {
-  //         navigate('/paymentsuccess');
-  //       },
-  //       () => {
-  //         console.log('Payment unsuccessful or window closed');
-  //         navigate('/paymentunsuccess'); 
-  //       }
-  //     );
-  //   })
-  //   .catch((err) => {
-  //     console.error('Error:', err);
-  //     setErrorMessage('An error occurred while submitting the form. Please try again.');
-  //   });
-  // };
 
   // New handleSubmit function to only send form data to backend
-  const handleSubmit = async (e) => {
-    e.preventDefault();
   
+  const handleSubmit = async (e) => {
+    e.preventDefault();  
     const formDataToSend = {
-      surname: 'Doe',                  // Sample surname
-      firstNames: 'John',               // Sample first names
-      gender: 'Male',                   // Sample gender
-      dob: '1990-01-01',                // Sample date of birth
-      birthPlace: 'Cityville',          // Sample place of birth
-      nin: '1234567890',                // Sample NIN
-      maritalStat: 'Single',            // Sample marital status
-      occupat: 'Developer',             // Sample occupation
-      email: 'rafiufahad1@gmail.com',    // Sample email
-      password: 'yourPasswordHere',     // Sample password
-      address: '123 Main St',           // Sample address
-      stateOfRes: 'California',         // Sample state of residence
-      lgaOfRes: 'Los Angeles',          // Sample LGA of residence
-      nationality: 'NG',                // Sample nationality (e.g., NG for Nigeria)
-      origState: 'California',          // Sample original state
-      origLga: 'Los Angeles',           // Sample original LGA
-      phone: '09087662613',                // Sample phone number
-      passNum: 'A12345678',             // Sample passport number
-      issuedOn: '2020-01-01',           // Sample passport issuance date
-      expires: '2030-01-01',            // Sample passport expiry date
-      destination: 'USA',               // Sample destination
-      startDate: '2023-01-01',          // Sample start date for policy
-      coupon: '',                       // Sample coupon
-      endDate: '2024-01-01',            // Sample end date for policy
-      creditBalance: 0,                 // Sample credit balance (0)
-      role: 'user',                     // Sample role
-      payRefId: 'TESTREF123',           // Sample payment reference ID
-      premium: 50000,                   // Sample premium amount
+        // Personal Data
+        surname: formData.personalData.surname,
+        firstNames: formData.personalData.other_names,
+        gender: formData.personalData.gender,
+        dob: formData.personalData.dob,
+        birthPlace: formData.personalData.place_of_birth,
+        maritalStat: formData.personalData.marital_status,
+        occupat: formData.personalData.occupat, 
+        email: formData.loginDetails.email,
+        password: formData.loginDetails.password,
+        address: formData.personalData.residence_addr1,
+        stateOfRes: formData.personalData.state_residence,
+        lgaOfRes: formData.personalData.residence_lga,
+        nationality: formData.personalData.nationality,
+        origState: formData.personalData.stateOfOrigin,
+        origLga: formData.personalData.lgaOfOrigin,
+        phone: formData.personalData.telephone_number,
+      
+        // Next Of Kin
+        fullName: formData.nextOfKin.fullName,
+        relationship: formData.nextOfKin.relationship,
+        kinAddress: formData.nextOfKin.address,
+      
+        // Cover Destination
+        passNum: formData.coverDestination.passportNo,
+        issuedOn: formData.coverDestination.issuance_date,
+        expires: formData.coverDestination.expiry_date,
+        nin: formData.coverDestination.nin,
+        destination: formData.coverDestination.destination,
+        startDate: formData.coverDestination.startDate,
+        endDate: formData.coverDestination.endDate,
+      
+        // Others
+        q1: formData.others.q1, 
+        q2: formData.others.q2, 
+        image: formData.others.image, 
+      
+        // Additional Info
+        role: formData.role || 'user',
+        payRefId: 'PAYTELTG37',
+        premium: 20891, 
+        paid: true, 
+        coupon: 0,
+        creditBalance: 0,
     };
   
-    console.log('Submitting data:', formDataToSend);  // Log the data being sent
+    setIsLoading(true);
+    setErrorMessage('');
   
     try {
-      // Step 1: Register the user
-      const registerResponse = await axios.post('http://localhost:8081/register', formDataToSend);
-      const { token } = registerResponse.data; // Get the token from the response
-  
-      // Step 2: Create policy using the token
-      const policyResponse = await axios.post('http://localhost:8081/user/createpolicy', formDataToSend, {
-        headers: {
-          'Authorization': `Bearer ${token}`, 
+      console.log('Formatted data:', formDataToSend);
+
+      // Send data to backend endpoint
+      const response = await axios.post('http://localhost:8081/register', formDataToSend, 
+        {headers: {
           'Content-Type': 'application/json',
-        }
-      });
-  
-      console.log('User registered and policy created:', policyResponse.data);
+          'Authorization': `Bearer 39109f7df56e1051c39YNM9e6YK85066bb852`,
+        }}
+      );
+
+      const { user, policy } = response.data;
+
+        console.log('User registered and policy created:', { user, policy });
+      
+        // Redirect to payment success page after successful registration and policy creation 
       alert('Registration and policy creation successful!');
       navigate('/paymentsuccess');
     } catch (error) {
-      console.error('Error:', error.response ? error.response.data : error.message);
-      setErrorMessage('Error submitting form. Please try again.');
+      console.error('Error:', error);
+      if (error.response) {
+        switch (error.response.status) {
+          case 400:
+            setErrorMessage('Invalid input. Please check your data and try again.');
+            break;
+          case 401:
+            setErrorMessage('Unauthorized. Please check your credentials.');
+            break;
+          case 409:
+            setErrorMessage('User already exists. Please log in or use a different email.');
+            break;
+          case 500:
+            setErrorMessage('Server error. Please try again later.');
+            break;
+          default:
+            setErrorMessage('An unexpected error occurred. Please try again.');
+        }
+      } else if (error.request) {
+        setErrorMessage('No response from server. Please check your internet connection.');
+      }  else {
+        setErrorMessage('Error setting up the request. Please try again.');
+      }
       navigate('/paymentunsuccess');
+    } finally {
+      setIsLoading(false);
     }
   };
-  
-
-  useEffect(() => {
-
-
-    console.log('Form Data:', formData);
-  }, [formData]);
 
   return (
     <div className='bg-gray2'>
@@ -215,16 +175,22 @@ const AppSummary = () => {
         </div>
 
         <div className="mt-6 mb-10 flex justify-center gap-2">
-          <button className="bg-white border border-black text-black px-4 py-2 rounded-lg">Cancel</button>
-          <Link to="">
-            <button 
-              onClick={handleSubmit} 
-              className={`bg-primary text-white px-4 py-2 rounded-lg ${!termsAccepted ? 'opacity-50 cursor-not-allowed' : ''}`} 
-              disabled={!termsAccepted}
-            >
-              Pay Now
-            </button>
-          </Link>
+          <button onClick={() => navigate('/')} className="bg-white border border-black text-black px-4 py-2 rounded-lg">Cancel</button>
+          <button 
+            onClick={handleSubmit} 
+            className={`bg-primary text-white px-4 py-2 rounded-lg ${!termsAccepted || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`} 
+            disabled={!termsAccepted || isLoading}
+          >
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <svg className="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Processing...
+              </div>
+            ) : 'Pay Now'}
+          </button>
         </div>
       </div>
       <Footer />

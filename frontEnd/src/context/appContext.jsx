@@ -175,44 +175,46 @@ const AppContextProvider = (props) => {
       
     const initialState = {
         personalData: {
-          surname: 'Doe',                        // Sample surname
-          other_names: 'John',                   // Sample first names
-          gender: 'Male',                        // Sample gender
-          dob: '1990-01-01',                     // Sample date of birth
-          place_of_birth: 'Cityville',           // Sample place of birth
-          marital_status: 'Single',              // Sample marital status
-          residence_addr1: '123 Main St',        // Sample residence address
-          state_residence: 'California',         // Sample state of residence
-          residence_lga: 'Los Angeles',          // Sample LGA of residence
-          nationality: 'NG',                     // Sample nationality (e.g., NG for Nigeria)
-          stateOfOrigin: 'California',           // Sample state of origin
-          lgaOfOrigin: 'Los Angeles',            // Sample LGA of origin
-          telephone_number: '555-1234',          // Sample telephone number
+          surname: 'Doe',
+          other_names: 'John',
+          gender: 'Male',
+          dob: '1990-12-10',
+          place_of_birth: 'Cityville',
+          marital_status: 'Single',
+          residence_addr1: '123 Main St',
+          state_residence: 'California',
+          residence_lga: 'Los Angeles',
+          nationality: 'NG',
+          stateOfOrigin: 'California',
+          lgaOfOrigin: 'Los Angeles',
+          telephone_number: 9087651222,
         },
         nextOfKin: {
-          fullName: 'Jane Doe',                  // Sample full name of next of kin
-          relationship: 'Sister',                // Sample relationship
-          address: '456 Oak St',                 // Sample address
+          fullName: 'Jane Doe',
+          relationship: 'Sister',
+          address: '456 Oak St',
         },
         coverDestination: {
-          passportNo: 'A12345678',               // Sample passport number
-          issuance_date: '2020-01-01',           // Sample issuance date
-          expiry_date: '2030-01-01',             // Sample expiry date
-          nin: '1234567890',                     // Sample NIN
-          destination: 'USA',                    // Sample destination
-          startDate: '2023-01-01',               // Sample start date
-          endDate: '2024-01-01',                 // Sample end date
+          passportNo: 'A12345678',
+          issuance_date: '2020-01-31',
+          expiry_date: '2030-01-21',
+          nin: '1234567890',
+          destination: 'USA',
+          startDate: '2023-01-01',
+          endDate: '2024-01-01',
         },
         loginDetails: {
-          email: 'rafiufahad1@gmail.com',         // Sample email
-          password: 'University2@',          // Sample password
-          confirmPassword: 'University2@',   // Sample confirm password
+          email: 'magret.doee@example.com',
+          password: 'University2@',
+          confirmPassword: 'University2@',
         },
         others: {
-          q1: 'Yes',                             // Sample answer to question 1
-          q2: 'No',                              // Sample answer to question 2
+          q1: 'Yes',
+          q2: 'No',
+          image: 'base64EncodedImageString', // Use a sample base64 encoded string for testing
         },
       };
+      
       
 
       

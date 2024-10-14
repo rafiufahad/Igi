@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../context/appContext';
 import Header from '../comppnents/Header';
 import Footer from '../comppnents/Footer';
-import { useSummaryData } from '../comppnents/Registration/summaryHelpers'; // Import the same helper
+import { useSummaryData } from '../utils/summaryHelpers';
 
 
 const PaymentSuccess = () => {
@@ -111,8 +111,8 @@ const PaymentSuccess = () => {
           </div>
 
           <div className="mt-6 mb-10 flex justify-center gap-2">
-            <button className="bg-white border border-black text-black px-4 py-2 rounded-lg">Go to Dashboard</button>
-            <button className="bg-primary text-white px-4 py-2 rounded-lg">Download</button>
+            <button className="bg-white border border-black text-black px-4 py-2 rounded-lg">Login to Dashboard</button>
+            <button className="bg-primary text-white px-4 py-2 rounded-lg">Download Certificate</button>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { AppContext } from '../../context/appContext';
 import CustomSelect from '../CustomSelect';
-import { validatePassportNo, validateIssueDate, validateExpiryDate, validateNIN, validateStartDate, validateEndDate } from './validationHelper';
+import { validatePassportNo, validateIssueDate, validateExpiryDate, validateNIN, validateStartDate, validateEndDate } from '../../utils/validationHelper';
 
 const CoverDestination = ({ handleNextSection, onProgressUpdate }) => {
   const { formData, handleChange, countryZones } = useContext(AppContext);
@@ -17,13 +17,13 @@ const CoverDestination = ({ handleNextSection, onProgressUpdate }) => {
       validate: validatePassportNo 
     },
     { 
-      name: 'issuance_date',  // Changed from 'issueDate' to 'issuance_date' to match the coverDestination object
+      name: 'issuance_date',  
       label: 'Issuance Date:', 
       type: 'date', 
       validate: validateIssueDate 
     },
     { 
-      name: 'expiry_date',  // Changed from 'expiryDate' to 'expiry_date'
+      name: 'expiry_date',  
       label: 'Expiry Date:', 
       type: 'date', 
       validate: (value) => validateExpiryDate(formData.coverDestination.issuance_date, value) 

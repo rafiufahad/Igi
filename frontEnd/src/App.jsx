@@ -28,10 +28,9 @@ const App = () => {
         <Route path='/registration/appsummary' element={<AppSummary />} />
 
         {/* Dashboard default route redirects to the main dashboard page */}
-        <Route path='/dashboard' element={<Navigate to='/dashboard/dashboard' />} />
+        <Route path='/dashboard' element={<DashBoard />} />
         
         {/* Define routes for different sections */}
-        <Route path='/dashboard/dashboard' element={<DashBoard />} />
         <Route path='/dashboard/policies' element={<Policies />} />
         <Route path='/dashboard/reports' element={<Reports />} />
         <Route path='/dashboard/branch-agencies' element={<BranchesAgencies />} />

@@ -1,4 +1,5 @@
-import { insurancePricingData } from "./insurancePricingData";
+import { insurancePricingData } from "../comppnents/Registration/insurancePricingData";
+
 
 // Helper function to capitalize the first letter of each word
 const capitalizeWords = (str) => {
@@ -118,7 +119,7 @@ export const calculatePremium = (formData, countryZones) => {
 };
 
 // Function to calculate premium amount as a proper number
-const amount = (formData, countryZones) => {
+export const premiumAmount = (formData, countryZones) => {
   const area = getArea(formData, countryZones);
   const dayDiff = parseInt(calculateDuration(formData).split(" ")[0], 10);
   const age = calculateAge(formData);
@@ -141,6 +142,21 @@ const amount = (formData, countryZones) => {
 
   return selectedPrice ? selectedPrice : null; // Return the selected price as a number
 };
+
+
+
+//   const date = new Date(dateString);
+//   if (isNaN(date.getTime())) {
+//     throw new Error('Invalid date format');
+//   }
+  
+//   // Format date to YYYY-MM-DD
+//   const formattedDate = date.toISOString().split('T')[0];  // 'toISOString' returns date in ISO format, and 'split' removes the time part
+//   return formattedDate;
+// };
+
+
+
 
 // Example usage function to store results in variables
 export const useSummaryData = (formData, countryZones) => {
@@ -169,4 +185,4 @@ export const useSummaryData = (formData, countryZones) => {
   };
 };
 
-export default amount
+

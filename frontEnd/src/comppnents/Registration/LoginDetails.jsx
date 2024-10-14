@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { AppContext } from '../../context/appContext';
-import { validatePasswordMatch, hashPassword } from './validationHelper'; 
+import { validatePasswordMatch, hashPassword, validateEmail } from '../../utils/validationHelper'; 
+
 
 const LoginDetails = ({ handleNextSection, onProgressUpdate }) => {
   const { formData, handleChange } = useContext(AppContext);
@@ -8,21 +9,22 @@ const LoginDetails = ({ handleNextSection, onProgressUpdate }) => {
   const questions = [
     { 
       id: 1, 
-      name: 'email',  // Added the 'name' key to match the loginDetails object
+      name: 'email', 
       label: 'Email Address', 
       type: 'email', 
-      placeholder: 'Enter your Email Address' 
+      placeholder: 'Enter your Email Address',
+      validate: validateEmail,
     },
     { 
       id: 2, 
-      name: 'password',  // Added the 'name' key to match the loginDetails object
+      name: 'password',  
       label: 'Password', 
       type: 'password', 
       placeholder: 'Enter your Password' 
     },
     { 
       id: 3, 
-      name: 'confirmPassword',  // Added the 'name' key to match the loginDetails object
+      name: 'confirmPassword', 
       label: 'Confirm Password', 
       type: 'password', 
       placeholder: 'Confirm your Password' 

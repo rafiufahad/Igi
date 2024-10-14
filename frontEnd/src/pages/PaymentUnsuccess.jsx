@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../context/appContext';
 import Header from '../comppnents/Header';
 import Footer from '../comppnents/Footer';
-import { useSummaryData } from '../comppnents/Registration/summaryHelpers'; // Import the same helper
+import { useSummaryData } from '../utils/summaryHelpers';
 
 
 const PayentUnsuccess = () => {
