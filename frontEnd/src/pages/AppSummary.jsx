@@ -1,14 +1,11 @@
 import { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../context/appContext';
 import { useNavigate } from 'react-router-dom';
-// import api from '../api/api';
 import { useSummaryData, generateReference, premiumAmount } from '../utils/summaryHelpers';
 import Footer from '../comppnents/Footer';
 import Header from '../comppnents/Header';
 import { payWithPaystack } from '../api/paystackPayment';
 import axios from 'axios';
-
-
 
 const AppSummary = () => {
   const formatLabel = (key) => {
@@ -19,7 +16,6 @@ const AppSummary = () => {
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
   
-  
   const { formData, countryZones } = useContext(AppContext);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,13 +24,12 @@ const AppSummary = () => {
 
   const navigate = useNavigate();
   const summaryData = useSummaryData(formData, countryZones);
+  const calculatedAmount = 20891; // Example premium amount
+  const email = formData.loginDetails.email; // User's email
 
-  // New handleSubmit function to only send form data to backend
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault();  
+  // Function to submit form data after successful payment
+  const handleSubmit = async () => {
     const formDataToSend = {
-        // Personal Data
         surname: formData.personalData.surname,
         firstNames: formData.personalData.other_names,
         gender: formData.personalData.gender,
@@ -51,13 +46,9 @@ const AppSummary = () => {
         origState: formData.personalData.stateOfOrigin,
         origLga: formData.personalData.lgaOfOrigin,
         phone: formData.personalData.telephone_number,
-      
-        // Next Of Kin
         fullName: formData.nextOfKin.fullName,
         relationship: formData.nextOfKin.relationship,
         kinAddress: formData.nextOfKin.address,
-      
-        // Cover Destination
         passNum: formData.coverDestination.passportNo,
         issuedOn: formData.coverDestination.issuance_date,
         expires: formData.coverDestination.expiry_date,
@@ -65,27 +56,21 @@ const AppSummary = () => {
         destination: formData.coverDestination.destination,
         startDate: formData.coverDestination.startDate,
         endDate: formData.coverDestination.endDate,
-      
-        // Others
         q1: formData.others.q1, 
         q2: formData.others.q2, 
         image: formData.others.image, 
-      
-        // Additional Info
         role: formData.role || 'user',
-        payRefId: 'PAYTELTG37',
-        premium: 20891, 
+        payRefId: reference, // Payment reference
+        premium: calculatedAmount, 
         paid: true, 
         coupon: 0,
         creditBalance: 0,
     };
-  
+
     setIsLoading(true);
     setErrorMessage('');
   
     try {
-      console.log('Formatted data:', formDataToSend);
-
       // Send data to backend endpoint
       const response = await axios.post('http://localhost:8081/register', formDataToSend, 
         {headers: {
@@ -94,41 +79,38 @@ const AppSummary = () => {
         }}
       );
 
-      const { user, policy } = response.data;
-
-        console.log('User registered and policy created:', { user, policy });
+      console.log('User registered and policy created:', response.data);
       
-        // Redirect to payment success page after successful registration and policy creation 
+      // Redirect to payment success page after successful registration and policy creation
       alert('Registration and policy creation successful!');
       navigate('/paymentsuccess');
     } catch (error) {
       console.error('Error:', error);
-      if (error.response) {
-        switch (error.response.status) {
-          case 400:
-            setErrorMessage('Invalid input. Please check your data and try again.');
-            break;
-          case 401:
-            setErrorMessage('Unauthorized. Please check your credentials.');
-            break;
-          case 409:
-            setErrorMessage('User already exists. Please log in or use a different email.');
-            break;
-          case 500:
-            setErrorMessage('Server error. Please try again later.');
-            break;
-          default:
-            setErrorMessage('An unexpected error occurred. Please try again.');
-        }
-      } else if (error.request) {
-        setErrorMessage('No response from server. Please check your internet connection.');
-      }  else {
-        setErrorMessage('Error setting up the request. Please try again.');
-      }
+      setErrorMessage('An error occurred. Please try again.');
       navigate('/paymentunsuccess');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Function to initiate Paystack payment
+  const initiatePaystack = () => {
+    payWithPaystack(
+      email,
+      calculatedAmount, 
+      reference, // Payment reference
+      (paymentReference) => {
+        // If payment is successful
+        setReference(paymentReference); // Save the payment reference
+        sessionStorage.setItem('paymentReference', paymentReference);
+        handleSubmit(); // Call form submission after successful payment
+      },
+      () => {
+        // If payment fails or is canceled
+        console.log('Payment unsuccessful or window closed');
+        navigate('/paymentunsuccess');
+      }
+    );
   };
 
   return (
@@ -177,7 +159,7 @@ const AppSummary = () => {
         <div className="mt-6 mb-10 flex justify-center gap-2">
           <button onClick={() => navigate('/')} className="bg-white border border-black text-black px-4 py-2 rounded-lg">Cancel</button>
           <button 
-            onClick={handleSubmit} 
+            onClick={initiatePaystack} 
             className={`bg-primary text-white px-4 py-2 rounded-lg ${!termsAccepted || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`} 
             disabled={!termsAccepted || isLoading}
           >

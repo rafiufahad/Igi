@@ -1,9 +1,23 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import assets from '../../assets/assets';
 import { Link } from 'react-router-dom';
+import { AppContext } from '../../context/appContext';
+
+
 
 const DNavbar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { user } = useContext(AppContext);
+  let displayName;
+
+  if (user.role === 'user') {
+    displayName = `${user.surname} ${user.firstNames}`;
+  } else if (user.role === 'agent') {
+    displayName = user.agentName; // Assuming agentName is part of the user data
+  } else if (user.role === 'superAdmin') {
+    displayName = 'Super Admin';
+  }
+
 
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
@@ -33,7 +47,7 @@ const DNavbar = () => {
           <div className='shrink-1 flex items-center gap-12'>
             <div className='flex gap-3 items-center'>
               <img className='hidden sm:block w-12 cursor-pointer' src={assets.profileIcon} alt="Profile" />
-              <p className='hidden sm:block'>Super Admin</p>
+              <p className='hidden sm:block'>{displayName}</p>
             </div>
             <img 
               onClick={handleToggle} 

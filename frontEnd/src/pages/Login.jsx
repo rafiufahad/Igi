@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import assets from '../../src/assets/assets';
 import { Link } from 'react-router-dom';
 import PrimaryBtn from '../comppnents/PrimaryBtn';
-import axios from 'axios'; 
+import { AppContext } from '../context/appContext';
+
+
+
 
 const Login = () => {
+  const { login } = useContext(AppContext);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -21,23 +25,25 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:8081/login', { email, password });
-      const { token, role } = response.data;
-      
-      // Store the token in localStorage or a more secure storage method
-      localStorage.setItem('token', token);
-      localStorage.setItem('userRole', role);
+        const role = await login(email, password);
 
-      // Redirect based on user role
-      if (role === 'agent') {
-        navigate('/agent-dashboard');
-      } else {
-        navigate('/dashboard');
-      }
+        // Redirect based on user role
+        if (role === 'agent' || role === 'creditAgent') {
+            navigate('/agent-dashboard');
+        } else if (role === 'superadmin' || role === 'admin') {
+            navigate('/superadmin-dashboard');
+        } else if (role === 'user') {
+            navigate('/user-dashboard');
+        } else {
+            // Default case if the role is not recognized
+            console.error('User not found');
+            setError('User role not found');
+        }
     } catch (error) {
-      setError(error.response?.data?.msg || 'An error occurred during login');
+        setError(error.response?.data?.msg || 'An error occurred during login');
     }
-  };
+};
+
 
   return (
     <div className="relative w-full min-h-screen bg-no-repeat bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${assets.background})` }}>
@@ -49,7 +55,7 @@ const Login = () => {
         </div>
 
         <div className='flex items-center bg-white bg-opacity-80 rounded-xl z-2'>
-          <div className='flex flex-col flex-grow justify-center items-center text-center z-10 sm:rounded-xl mb-4 w-full p-8'>
+          <div className='flex flex-col flex-grow justify-center items-center text-center z-10 sm:rounded-xl mb-4 w-full'>
             <h6 className='text-base sm:text-2xl font-bold text-black my-8 mx-auto'>Login</h6>
             <div className='flex flex-row gap-4 mb-4'>
               <p className='text-xs sm:text-base text-black mx-auto font-normal text-center'>

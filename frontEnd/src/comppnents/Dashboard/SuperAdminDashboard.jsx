@@ -1,8 +1,103 @@
-import assets from '../../assets/assets';
-import Dropdown from './Dropdown';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { AppContext } from '../../context/appContext';
+import { fetchAllAgents, fetchAllPolicies, fetchAllUsers } from '../../api/api';
+import { useNavigate } from 'react-router-dom';  // Add this import
 
+const SuperAdminDashboard = () => {
+  const [users, setUsers] = useState([]);
+  const [agents, setAgents] = useState([]);
+  const [policies, setPolicies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { user } = useContext(AppContext);
+  const navigate = useNavigate();  // Add this
 
-const Container = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [usersRes, agentsRes, policiesRes] = await Promise.all([
+          fetchAllUsers(),
+          fetchAllAgents(),
+          fetchAllPolicies()
+        ]);
+
+        setUsers(usersRes.data);
+        setAgents(agentsRes.data);
+        setPolicies(policiesRes.data);
+        setLoading(false);
+      } catch (err) {
+        if (err.response?.status === 401 && err.response?.data?.code === 'TOKEN_EXPIRED') {
+          // Token expired, redirect to login
+          localStorage.removeItem('token');
+          navigate('/login');
+        } else {
+          setError('Failed to fetch data');
+        }
+        setLoading(false);
+      }
+    };
+
+    // Check if token exists before fetching
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    fetchData();
+  }, [navigate]);
+
+  // Update the axios request handlers to handle token expiration
+  const createBranch = async (branchData) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      const response = await axios.post('http://localhost:8081/super/branch', branchData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Handle success
+    } catch (err) {
+      if (err.response?.status === 401 && err.response?.data?.code === 'TOKEN_EXPIRED') {
+        localStorage.removeItem('token');
+        navigate('/login');
+      } else {
+        setError('Failed to create branch');
+      }
+    }
+  };
+
+  const updatePolicy = async (policyId, policyData) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      const response = await axios.put(`http://localhost:8081/super/updatepolicy/${policyId}`, policyData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setPolicies(policies.map(policy => policy.id === policyId ? response.data : policy));
+    } catch (err) {
+      if (err.response?.status === 401 && err.response?.data?.code === 'TOKEN_EXPIRED') {
+        localStorage.removeItem('token');
+        navigate('/login');
+      } else {
+        setError('Failed to update policy');
+      }
+    }
+  };
+
+  // Rest of the component remains the same...
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
   return (
     <div>
       <main className="flex-1 mt-0">
@@ -153,7 +248,7 @@ const Container = () => {
           </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Container
+export default SuperAdminDashboard;

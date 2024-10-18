@@ -3,10 +3,12 @@ import { AppContext } from '../context/appContext';
 import Header from '../comppnents/Header';
 import Footer from '../comppnents/Footer';
 import { useSummaryData } from '../utils/summaryHelpers';
+import { useNavigate } from 'react-router-dom';
 
 
 const PayentUnsuccess = () => {
   const { formData, countryZones } = useContext(AppContext);
+  const navigate = useNavigate();
 
   // Use the useSummaryData hook to get all the summary data
   const summaryData = useSummaryData(formData, countryZones);
@@ -114,7 +116,7 @@ const PayentUnsuccess = () => {
 
           <div className="mt-6 mb-10 flex justify-center gap-2">
             <button className="bg-white border border-black text-black px-4 py-2 rounded-lg">Retry</button>
-            <button className="bg-primary text-white px-4 py-2 rounded-lg">Start New Application</button>
+            <button onClick={() => navigate('/registration')} className="bg-primary text-white px-4 py-2 rounded-lg">Start New Application</button>
           </div>
         </div>
       </div>

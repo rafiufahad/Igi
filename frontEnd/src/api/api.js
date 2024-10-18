@@ -16,55 +16,123 @@
 
 import axios from 'axios';
 
-// const mapInitialStateToApiFormat = (formData) => {
-//   return [
-//       { key: "surname", value: formData.personalData.surname, type: "text" },
-//       { key: "other_names", value: formData.personalData.other_names, type: "text" },
-//       { key: "gender", value: formData.personalData.gender, type: "text" },
-//       { key: "dob_year", value: formData.personalData.dateOfBirth.split("-")[0], type: "text" }, // Extract year from date
-//       { key: "dob_month", value: formData.personalData.dateOfBirth.split("-")[1], type: "text" }, // Extract month from date
-//       { key: "dob_day", value: formData.personalData.dateOfBirth.split("-")[2], type: "text" }, // Extract day from date
-//       { key: "place_of_birth", value: formData.personalData.place_of_birth, type: "text" },
-//       { key: "marital_status", value: formData.personalData.marital_status, type: "text" },
-//       { key: "residence_addr1", value: formData.personalData.residence_addr1, type: "text" },
-//       { key: "state_residence", value: formData.personalData.state_residence, type: "text" },
-//       { key: "residence_lga", value: formData.personalData.residence_lga, type: "text" },
-//       { key: "nationality", value: formData.personalData.nationality, type: "text" },
-//       { key: "state_of_origin", value: formData.personalData.stateOfOrigin, type: "text" }, // Convert stateOfOrigin to state_of_origin
-//       { key: "lga_of_origin", value: formData.personalData.lgaOfOrigin, type: "text" }, // Convert lgaOfOrigin to lga_of_origin
-//       { key: "gsm", value: formData.personalData.telephone_number, type: "text" }, // Change to gsm for the API
-//       { key: "passport_no", value: formData.coverDestination.passportNo, type: "text" },
-//       { key: "issuance_date", value: formData.coverDestination.issuance_date, type: "text" },
-//       { key: "expiry_date", value: formData.coverDestination.expiry_date, type: "text" },
-//       { key: "nin", value: formData.coverDestination.nin, type: "text" },
-//       { key: "destination", value: formData.coverDestination.destination, type: "text" },
-//       { key: "start_date", value: formData.coverDestination.startDate, type: "text" },
-//       { key: "end_date", value: formData.coverDestination.endDate, type: "text" },
-//       { key: "email", value: formData.loginDetails.email, type: "text" },
-//       { key: "password", value: formData.loginDetails.password, type: "text" },
-//       { key: "confirm_password", value: formData.loginDetails.confirmPassword, type: "text" }
-//   ];
-// };
+const apiBase = 'http://localhost:8081/super';
 
+// Fetch one user by ID
+export const fetchUserById = (userId) => {
+  return axios.get(`${apiBase}/getuser/${userId}`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
 
+// Fetch one policy by ID
+export const fetchPolicyById = (policyId) => {
+  return axios.get(`${apiBase}/getpolicy/${policyId}`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
 
-// Directly hardcoding the API URL and Token for testing
-const api = axios.create({
-  baseURL: 'http://localhost:8081',
-  headers: {
-    'Authorization': 'Bearer 39109f7df56e1051c39YNM9e6YK85066bb852', // Bearer token for authentication
-    'Content-Type': 'application/json',
-  },
-});
+// Fetch all users
+export const fetchAllUsers = () => {
+  return axios.get(`${apiBase}/getusers`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
 
-export default api;
+// Fetch all agents
+export const fetchAllAgents = () => {
+  return axios.get(`${apiBase}/getagents`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
 
+// Fetch all policies
+export const fetchAllPolicies = () => {
+  return axios.get(`${apiBase}/policies`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
 
-// api.js
-// import axios from 'axios';
+// Update user information
+export const updateUserInfo = (userId, userData) => {
+  return axios.put(`${apiBase}/updateuser/${userId}`, userData, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
 
-// const api = axios.create({
-//   baseURL: 'http://localhost:8081',
-// });
+// Update agent information
+export const updateAgentInfo = (agentId, agentData) => {
+  return axios.put(`${apiBase}/updateagent/${agentId}`, agentData, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
 
-// export default api;
+// Delete a user
+export const deleteUser = (userId) => {
+  return axios.delete(`${apiBase}/deleteuser/${userId}`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
+
+// Delete an agent
+export const deleteAgent = (agentId) => {
+  return axios.delete(`${apiBase}/deleteagent/${agentId}`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
+
+// Create a new branch
+export const createBranch = (branchData) => {
+  return axios.post(`${apiBase}/branch`, branchData, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
+
+// Get branch details by ID
+export const getBranchById = (branchId) => {
+  return axios.get(`${apiBase}/branch/${branchId}`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
+
+// Update a policy
+export const updatePolicy = (policyId, policyData) => {
+  return axios.put(`${apiBase}/updatepolicy/${policyId}`, policyData, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
+
+// Create and assign a coupon to a user
+export const createAndAssignCoupon = (userId, couponData) => {
+  return axios.post(`${apiBase}/createcoupon/${userId}`, couponData, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
+
+// Create a voucher for an agent
+export const createVoucher = (agentId, voucherData) => {
+  return axios.post(`${apiBase}/voucher/${agentId}`, voucherData, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
+
+// Top-up voucher amount
+export const topUpVoucher = (agentId, voucherData) => {
+  return axios.post(`${apiBase}/voucher/topup/${agentId}`, voucherData, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
+
+// Create a new agent
+export const createAgent = (agentData) => {
+  return axios.post(`${apiBase}/createagent`, agentData, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};
+
+// Get branch statistics
+export const getBranchStatistics = () => {
+  return axios.get(`${apiBase}/allbranchinfo`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+};

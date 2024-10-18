@@ -1,9 +1,164 @@
 import { createContext, useState } from "react";
+import axios from 'axios';
 
 export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
+    
+    const initialState = {
+        personalData: {
+          surname: 'Doe',
+          other_names: 'John',
+          gender: 'Male',
+          dob: '1990-12-10',
+          place_of_birth: 'Cityville',
+          marital_status: 'Single',
+          residence_addr1: '123 Main St',
+          state_residence: 'California',
+          residence_lga: 'Los Angeles',
+          nationality: 'NG',
+          stateOfOrigin: 'California',
+          lgaOfOrigin: 'Los Angeles',
+          telephone_number: 9087651222,
+        },
+        nextOfKin: {
+          fullName: 'Jane Doe',
+          relationship: 'Sister',
+          address: '456 Oak St',
+        },
+        coverDestination: {
+          passportNo: 'A12345678',
+          issuance_date: '2020-01-31',
+          expiry_date: '2030-01-21',
+          nin: '1234567890',
+          destination: 'USA',
+          startDate: '2023-01-01',
+          endDate: '2024-01-01',
+        },
+        loginDetails: {
+          email: 'mamadasvilli@example.com',
+          password: 'University2@',
+          confirmPassword: 'University2@',
+        },
+        others: {
+          q1: 'Yes',
+          q2: 'No',
+          image: 'base64EncodedImageString', // Use a sample base64 encoded string for testing
+        },
+      };    
 
+    // State Managements
+    const [formData, setFormData] = useState(initialState);
+    const [user, setUser] = useState(null);
+    
+    // const initialState = {
+
+    
+    
+    //     personalData: {
+    //       surname: '',                        
+    //       other_names: '',                    
+    //       gender: '',                         
+    //       dob: '',                    
+    //       place_of_birth: '',                 
+    //       marital_status: '',                 
+    //       residence_addr1: '',                
+    //       state_residence: '',                
+    //       residence_lga: '',                  
+    //       nationality: '',                    
+    //       stateOfOrigin: '',                  
+    //       lgaOfOrigin: '',                    
+    //       telephone_number: '',               
+    //     },
+    //     nextOfKin: {
+    //       fullName: '',
+    //       relationship: '',
+    //       address: '',
+    //     },
+    //     coverDestination: {
+    //       passportNo: '',                     
+    //       issuance_date: '',                  
+    //       expiry_date: '',                    
+    //       nin: '',                            
+    //       destination: '',                    
+    //       startDate: '',                      
+    //       endDate: '',                        
+    //     },
+    //     loginDetails: {
+    //       email: '',                          
+    //       password: '',                       
+    //       confirmPassword: '', 
+    //     },
+    //     others: {
+    //       q1: '',
+    //       q2: '',
+    //     },
+    //   };
+      
+    //  State list
+    
+    const login = async (email, password) => {
+        try {
+            const response = await axios.post('http://localhost:8081/login', { email, password });
+            console.log(response.data);
+            
+            const { token, role, surname, firstNames } = response.data;
+            
+            // Store the token in localStorage
+            localStorage.setItem('token', token);
+
+            // Set user in state
+            setUser({ role, surname, firstNames });
+
+            return role;
+        } catch (error) {
+            if (error.response) {
+                // Server responded with a status other than 2xx
+                console.error("Error response from server:", {
+                    status: error.response.status,
+                    statusText: error.response.statusText,
+                    data: error.response.data
+                });
+                throw new Error(`Login failed: ${error.response.statusText}. Server responded with status ${error.response.status}. Details: ${JSON.stringify(error.response.data)}`);
+            } else if (error.request) {
+                // Request was made, but no response received
+                console.error("No response received:", error.request);
+                throw new Error("Login failed: No response received from server. Please check your network connection.");
+            } else {
+                // Other errors (e.g., request setup issues)
+                console.error("Error setting up request:", error.message);
+                throw new Error(`Login failed: ${error.message}`);
+            }
+        }
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
+    };
+
+    // Check for existing token on app load
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+    //     if (token) {
+    //         // You might want to validate the token here
+    //         // For now, we'll just set a user with an unknown role
+    //         setUser({ role: 'unknown' });
+    //     }
+    // }, []);
+    
+    // Helper Functions
+    const handleChange = (section, field, value) => {
+        setFormData((prevData) => {
+            if (prevData[section][field] === value) return prevData;
+            return {
+                ...prevData,
+                [section]: { ...prevData[section], [field]: value }
+            };
+        });
+    };
+    
+    
     const stateList = [
         'Abia',
         'Adamawa',
@@ -40,7 +195,6 @@ const AppContextProvider = (props) => {
         'Yobe',
         'Zamfara',
       ];
-      
 
     // Updated Country List
     const countryList = [
@@ -131,107 +285,6 @@ const AppContextProvider = (props) => {
 
     const getAllCountries = [...getAllZone1Countries, ...getAllZone2Countries];
     
-    
-    // const initialState = {
-    //     personalData: {
-    //       surname: '',                        
-    //       other_names: '',                    
-    //       gender: '',                         
-    //       dob: '',                    
-    //       place_of_birth: '',                 
-    //       marital_status: '',                 
-    //       residence_addr1: '',                
-    //       state_residence: '',                
-    //       residence_lga: '',                  
-    //       nationality: '',                    
-    //       stateOfOrigin: '',                  
-    //       lgaOfOrigin: '',                    
-    //       telephone_number: '',               
-    //     },
-    //     nextOfKin: {
-    //       fullName: '',
-    //       relationship: '',
-    //       address: '',
-    //     },
-    //     coverDestination: {
-    //       passportNo: '',                     
-    //       issuance_date: '',                  
-    //       expiry_date: '',                    
-    //       nin: '',                            
-    //       destination: '',                    
-    //       startDate: '',                      
-    //       endDate: '',                        
-    //     },
-    //     loginDetails: {
-    //       email: '',                          
-    //       password: '',                       
-    //       confirmPassword: '', 
-    //     },
-    //     others: {
-    //       q1: '',
-    //       q2: '',
-    //     },
-    //   };
-      
-    const initialState = {
-        personalData: {
-          surname: 'Doe',
-          other_names: 'John',
-          gender: 'Male',
-          dob: '1990-12-10',
-          place_of_birth: 'Cityville',
-          marital_status: 'Single',
-          residence_addr1: '123 Main St',
-          state_residence: 'California',
-          residence_lga: 'Los Angeles',
-          nationality: 'NG',
-          stateOfOrigin: 'California',
-          lgaOfOrigin: 'Los Angeles',
-          telephone_number: 9087651222,
-        },
-        nextOfKin: {
-          fullName: 'Jane Doe',
-          relationship: 'Sister',
-          address: '456 Oak St',
-        },
-        coverDestination: {
-          passportNo: 'A12345678',
-          issuance_date: '2020-01-31',
-          expiry_date: '2030-01-21',
-          nin: '1234567890',
-          destination: 'USA',
-          startDate: '2023-01-01',
-          endDate: '2024-01-01',
-        },
-        loginDetails: {
-          email: 'magret.doee@example.com',
-          password: 'University2@',
-          confirmPassword: 'University2@',
-        },
-        others: {
-          q1: 'Yes',
-          q2: 'No',
-          image: 'base64EncodedImageString', // Use a sample base64 encoded string for testing
-        },
-      };
-      
-      
-
-      
-    
-    
-
-    const [formData, setFormData] = useState(initialState);
-
-    const handleChange = (section, field, value) => {
-        setFormData((prevData) => {
-            if (prevData[section][field] === value) return prevData;
-            return {
-                ...prevData,
-                [section]: { ...prevData[section], [field]: value }
-            };
-        });
-    };
 
     const value = {
         countryList,
@@ -241,7 +294,10 @@ const AppContextProvider = (props) => {
         getAllZone1Countries,
         getAllZone2Countries,
         getAllCountries,
-        stateList
+        stateList,
+        login,
+        logout,
+        user,
     };
 
     return (

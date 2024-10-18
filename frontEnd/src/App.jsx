@@ -14,10 +14,15 @@ import AppSummary from './pages/AppSummary';
 import PaymentPage from './pages/PaymentPage';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentUnsuccess from './pages/PaymentUnsuccess';
+import UserDashboard from './comppnents/Dashboard/UserDashboard';
+import SuperAdminDashboard from './comppnents/Dashboard/SuperAdminDashboard';
+import AgentDashboard from './comppnents/Dashboard/AgentDashboard';
 
 
 
 const App = () => {
+
+  
   return (
     <div>
       <Routes>
@@ -29,6 +34,11 @@ const App = () => {
 
         {/* Dashboard default route redirects to the main dashboard page */}
         <Route path='/dashboard' element={<DashBoard />} />
+        {/* Protected routes */}
+        <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/agent-dashboard" element={<AgentDashboard />} />
+        <Route path="/superadmin-dashboard" element={<SuperAdminDashboard />} />
+        <Route path="/user-dashboard" element={<UserDashboard />} />
         
         {/* Define routes for different sections */}
         <Route path='/dashboard/policies' element={<Policies />} />
