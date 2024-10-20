@@ -100,12 +100,15 @@ const AppContextProvider = (props) => {
     const login = async (email, password) => {
         try {
             const response = await axios.post('http://localhost:8081/login', { email, password });
-            console.log(response.data);
+            console.log(response.data.role);
             
             const { token, role, surname, firstNames } = response.data;
             
             // Store the token in localStorage
             localStorage.setItem('token', token);
+            localStorage.setItem('role', role);
+            console.log('Role saved to localStorage:', localStorage.getItem('role')); // Verify storage
+
 
             // Set user in state
             setUser({ role, surname, firstNames });
@@ -137,6 +140,7 @@ const AppContextProvider = (props) => {
         setUser(null);
     };
 
+    
     // Check for existing token on app load
     // useEffect(() => {
     //     const token = localStorage.getItem('token');
@@ -147,6 +151,7 @@ const AppContextProvider = (props) => {
     //     }
     // }, []);
     
+
     // Helper Functions
     const handleChange = (section, field, value) => {
         setFormData((prevData) => {

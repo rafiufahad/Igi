@@ -110,6 +110,10 @@ const UserDashboard = () => {
         
         {/* Content */}
         <div className="flex-1 overflow-auto w-full p-6 bg-gray-100">
+          <div className='flex justify-between mb-8 gap-8 '>
+              <h1 className='text-xl sm:text-2xl font-bold text-black'>Dashboard</h1>
+              <p className='text-black font-bold text-sm sm:text-lg'>Goodafternoon, <span className='text-primary font-bold text-base sm:text-lg'>John</span></p>
+          </div>
           <h2 className="text-xl font-semibold mb-4">User Policies</h2>
   
           {/* Route 1: Display all policies */}

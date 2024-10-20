@@ -4,6 +4,8 @@ import { fetchAllUsers, fetchAllAgents, fetchAllPolicies, createBranch, updatePo
 import { AppContext } from '../../context/appContext';
 import assets from "../../assets/assets";
 import Dropdown from './Dropdown';
+import DNavbar from './DNavbar';
+import Aside from './Aside';
 
 const initialDashboardState = {
   users: {
@@ -52,83 +54,88 @@ const SuperAdminDashboard = () => {
       navigate('/login');
     }
   }, [navigate]);
-
+  
   // Fetch all dashboard data
   useEffect(() => {
     const fetchDashboardData = async () => {
-     
+  
       // Fetch users with error handling
       const fetchUsers = async () => {
         try {
-          const response = await fetchAllUsers();
-          updateState('users', { 
-            data: response.data || [], 
+          const data = await fetchAllUsers();
+          // console.log('Users data:', data); // Debug log
+          updateState('users', {
+            data: data || [], // Changed from response.data
             loading: false,
-            error: null 
+            error: null
           });
-          
-          console.log(response.data);
-          
-
         } catch (error) {
           console.error('Error fetching users:', error);
-          updateState('users', { 
-            data: [], 
+          updateState('users', {
+            data: [],
             loading: false,
             error: error.response?.status === 403 ? 'Access denied' : 'Failed to fetch users'
           });
         }
       };
-
+  
       // Fetch agents with error handling
-      // const fetchAgents = async () => {
-      //   try {
-      //     const response = await fetchAllAgents();
-      //     updateState('agents', { 
-      //       data: response.data || [], 
-      //       loading: false,
-      //       error: null 
-      //     });
-      //   } catch (error) {
-      //     console.error('Error fetching agents:', error);
-      //     updateState('agents', { 
-      //       data: [], 
-      //       loading: false,
-      //       error: error.response?.status === 403 ? 'Access denied' : 'Failed to fetch agents'
-      //     });
-      //     // Don't set global error for 403 - allow dashboard to continue loading
-      //     if (error.response?.status !== 403) {
-      //       setGlobalError('Error loading some dashboard data');
-      //     }
-      //   }
-      // };
-
+      const fetchAgents = async () => {
+        try {
+          const data = await fetchAllAgents();
+          // console.log('Agent Data', data);
+          updateState('agents', {
+            data: data || [], // Changed from response.data
+            loading: false,
+            error: null
+          });
+        } catch (error) {
+          console.error('Error fetching agents:', error);
+          // Log full error object for better debugging
+          // if (error.response) {
+          //   console.error('Error Response Data:', error.response.data);
+          //   console.error('Error Response Status:', error.response.status);
+          //   console.error('Error Response Headers:', error.response.headers);
+          // } else if (error.request) {
+          //   console.error('Error Request (no response):', error.request);
+          // } else {
+          //   console.error('Error during setting up request:', error.message);
+          // }
+          updateState('agents', {
+            data: [],
+            loading: false,
+            error: error.response?.status === 403 ? 'Access denied' : 'Failed to fetch agents'
+          });
+        }
+      };
+  
       // Fetch policies with error handling
       const fetchPolicies = async () => {
         try {
-          const response = await fetchAllPolicies();
-          updateState('policies', { 
-            data: response.data || [], 
+          const data = await fetchAllPolicies();
+          // console.log('Policies data:', data); // Debug log
+          updateState('policies', {
+            data: data || [],
             loading: false,
-            error: null 
+            error: null
           });
         } catch (error) {
           console.error('Error fetching policies:', error);
-          updateState('policies', { 
-            data: [], 
+          updateState('policies', {
+            data: [],
             loading: false,
             error: error.response?.status === 403 ? 'Access denied' : 'Failed to fetch policies'
           });
         }
       };
-
+  
       // Execute all fetches in parallel and continue even if some fail
       await Promise.allSettled([
         fetchUsers(),
-        // fetchAgents(),
+        fetchAgents(),
         fetchPolicies()
       ]);
-
+  
       // Set loading to false for all sections that might not have been updated
       Object.keys(initialDashboardState).forEach(key => {
         setDashboardState(prev => ({
@@ -136,13 +143,18 @@ const SuperAdminDashboard = () => {
           [key]: {
             ...prev[key],
             loading: false
-          }
+          },
         }));
       });
     };
+  
+
+
 
     fetchDashboardData();
-  }, [navigate]);
+    
+  }, [navigate, user?.role]);
+  
 
   // Handler for creating a new branch
   const handleCreateBranch = async (branchData) => {
@@ -209,8 +221,17 @@ const SuperAdminDashboard = () => {
 
   // Your existing return statement goes here...
   return (
-    <div>
-    <main className="flex-1 mt-0">
+    <div className="h-screen w-screen overflow-auto m-0 p-0 flex flex-col box-border">
+    {/* Navbar */}
+    <DNavbar />
+    
+    {/* Main content */}
+    <div className="flex-1 flex flex-row mt-0">
+      {/* Sidebar */}
+      <Aside />
+      
+      {/* Content */}
+      <main className="flex-1 mt-0">
         <div className='mt-[40px] sm:ml-[40px] sm:mr-[64px] mx-3'>
           <div className='flex justify-between mb-8 gap-8 '>
             <h1 className='text-xl sm:text-2xl font-bold text-black'>Dashboard</h1>
@@ -358,6 +379,7 @@ const SuperAdminDashboard = () => {
         </div>
     </main>
     </div>
+  </div>
   )
 };
 

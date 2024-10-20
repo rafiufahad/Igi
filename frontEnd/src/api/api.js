@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const apiBase = 'http://localhost:8081/super';
 
-// Utility function to get headers with current token
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -10,17 +9,18 @@ const getAuthHeaders = () => {
   }
   return {
     Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    'Expires': '0'
   };
 };
 
-// Create axios instance with default config
 const api = axios.create({
   baseURL: apiBase,
-  timeout: 10000 // 10 second timeout
+  timeout: 10000
 });
 
-// Add response interceptor for error handling
 api.interceptors.response.use(
   response => response,
   error => {
@@ -48,15 +48,16 @@ api.interceptors.response.use(
   }
 );
 
-
-
-
+// ============================================== SUPERADMIN DASHBOARD ==============================================
+// ================================================================================================================================
 // User-related functions
 export const fetchUserById = async (userId) => {
   try {
     const response = await api.get(`/getuser/${userId}`, { headers: getAuthHeaders() });
+    console.log('User API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('User API Error:', error.response || error);
     throw error;
   }
 };
@@ -64,33 +65,36 @@ export const fetchUserById = async (userId) => {
 export const fetchAllUsers = async () => {
   try {
     const response = await api.get('/getusers', { headers: getAuthHeaders() });
+    console.log('Users API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Users API Error:', error.response || error);
     throw error;
   }
 };
 
 export const updateUserInfo = async (userId, userData) => {
   try {
-    const response = await api.put(`/updateuser/${userId}`, userData, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.put(`/updateuser/${userId}`, userData, { headers: getAuthHeaders() });
+    console.log('Update User API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Update User API Error:', error.response || error);
     throw error;
   }
 };
 
 export const deleteUser = async (userId) => {
   try {
-    const response = await api.delete(`/deleteuser/${userId}`, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.delete(`/deleteuser/${userId}`, { headers: getAuthHeaders() });
+    console.log('Delete User API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Delete User API Error:', error.response || error);
     throw error;
   }
 };
+
 
 
 
@@ -98,56 +102,57 @@ export const deleteUser = async (userId) => {
 export const fetchAllAgents = async () => {
   try {
     const response = await api.get('/getagents', { headers: getAuthHeaders() });
+    console.log('Agents API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Agents API Error:', error.response || error);
     throw error;
   }
 };
 
 export const updateAgentInfo = async (agentId, agentData) => {
   try {
-    const response = await api.put(`/updateagent/${agentId}`, agentData, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.put(`/updateagent/${agentId}`, agentData, { headers: getAuthHeaders() });
+    console.log('Update Agent API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Update Agent API Error:', error.response || error);
     throw error;
   }
 };
 
 export const deleteAgent = async (agentId) => {
   try {
-    const response = await api.delete(`/deleteagent/${agentId}`, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.delete(`/deleteagent/${agentId}`, { headers: getAuthHeaders() });
+    console.log('Delete Agent API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Delete Agent API Error:', error.response || error);
     throw error;
   }
 };
 
 export const createAgent = async (agentData) => {
   try {
-    const response = await api.post('/createagent', agentData, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.post('/createagent', agentData, { headers: getAuthHeaders() });
+    console.log('Create Agent API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Create Agent API Error:', error.response || error);
     throw error;
   }
 };
 
 
 
-
 // Policy-related functions
 export const fetchPolicyById = async (policyId) => {
   try {
-    const response = await api.get(`/getpolicy/${policyId}`, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.get(`/getpolicy/${policyId}`, { headers: getAuthHeaders() });
+    console.log('Policy API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Policy API Error:', error.response || error);
     throw error;
   }
 };
@@ -155,46 +160,46 @@ export const fetchPolicyById = async (policyId) => {
 export const fetchAllPolicies = async () => {
   try {
     const response = await api.get('/policies', { headers: getAuthHeaders() });
+    console.log('Policies API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Policies API Error:', error.response || error);
     throw error;
   }
 };
 
 export const updatePolicy = async (policyId, policyData) => {
   try {
-    const response = await api.put(`/updatepolicy/${policyId}`, policyData, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.put(`/updatepolicy/${policyId}`, policyData, { headers: getAuthHeaders() });
+    console.log('Update Policy API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Update Policy API Error:', error.response || error);
     throw error;
   }
 };
-
-
 
 
 
 // Branch-related functions
 export const createBranch = async (branchData) => {
   try {
-    const response = await api.post('/branch', branchData, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.post('/branch', branchData, { headers: getAuthHeaders() });
+    console.log('Create Branch API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Create Branch API Error:', error.response || error);
     throw error;
   }
 };
 
 export const getBranchById = async (branchId) => {
   try {
-    const response = await api.get(`/branch/${branchId}`, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.get(`/branch/${branchId}`, { headers: getAuthHeaders() });
+    console.log('Branch API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Branch API Error:', error.response || error);
     throw error;
   }
 };
@@ -202,45 +207,48 @@ export const getBranchById = async (branchId) => {
 export const getBranchStatistics = async () => {
   try {
     const response = await api.get('/allbranchinfo', { headers: getAuthHeaders() });
+    console.log('Branch Statistics API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Branch Statistics API Error:', error.response || error);
     throw error;
   }
 };
-
 
 
 
 // Coupon and Voucher functions
 export const createAndAssignCoupon = async (userId, couponData) => {
   try {
-    const response = await api.post(`/createcoupon/${userId}`, couponData, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.post(`/createcoupon/${userId}`, couponData, { headers: getAuthHeaders() });
+    console.log('Create Coupon API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Create Coupon API Error:', error.response || error);
     throw error;
   }
 };
 
 export const createVoucher = async (agentId, voucherData) => {
   try {
-    const response = await api.post(`/voucher/${agentId}`, voucherData, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.post(`/voucher/${agentId}`, voucherData, { headers: getAuthHeaders() });
+    console.log('Create Voucher API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Create Voucher API Error:', error.response || error);
     throw error;
   }
 };
 
 export const topUpVoucher = async (agentId, voucherData) => {
   try {
-    const response = await api.post(`/voucher/topup/${agentId}`, voucherData, { 
-      headers: getAuthHeaders() 
-    });
+    const response = await api.post(`/voucher/topup/${agentId}`, voucherData, { headers: getAuthHeaders() });
+    console.log('Top Up Voucher API Response:', response);
     return response.data;
   } catch (error) {
+    console.error('Top Up Voucher API Error:', error.response || error);
     throw error;
   }
 };
+
+

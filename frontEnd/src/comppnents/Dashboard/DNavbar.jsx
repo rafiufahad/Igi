@@ -10,12 +10,16 @@ const DNavbar = () => {
   const { user } = useContext(AppContext);
   let displayName;
 
-  if (user.role === 'user') {
-    displayName = `${user.surname} ${user.firstNames}`;
-  } else if (user.role === 'agent') {
-    displayName = user.agentName; // Assuming agentName is part of the user data
-  } else if (user.role === 'superAdmin') {
-    displayName = 'Super Admin';
+  if (user && user.role) {
+    if (user.role === 'user') {
+      displayName = `${user.surname} ${user.firstNames}`;
+    } else if (user.role === 'agent') {
+      displayName = user.agentName; // Assuming agentName is part of the user data
+    } else if (user?.role === 'superadmin') {
+      displayName = 'Super Admin';
+    }
+  } else {
+    displayName = 'Super Admin'; // Or any default fallback if the user is not loaded
   }
 
 
@@ -49,13 +53,14 @@ const DNavbar = () => {
               <img className='hidden sm:block w-12 cursor-pointer' src={assets.profileIcon} alt="Profile" />
               <p className='hidden sm:block'>{displayName}</p>
             </div>
+            
             <img 
               onClick={handleToggle} 
               className='sm:hidden w-5 sm:w-6 mr-5 cursor-pointer' 
               src={isExpanded ? assets.exit : assets.hamburger} 
               alt={isExpanded ? "Exit" : "Toggle"} 
             />
-          </div>
+          </div> 
         </div>
       </nav>
 
