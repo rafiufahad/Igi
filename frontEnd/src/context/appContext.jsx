@@ -36,7 +36,7 @@ const AppContextProvider = (props) => {
           endDate: '2024-01-01',
         },
         loginDetails: {
-          email: 'mamadasvilli@example.com',
+          email: 'ssdsfsfsfs@example.com',
           password: 'University2@',
           confirmPassword: 'University2@',
         },
